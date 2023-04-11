@@ -1,0 +1,18 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Register{% endblock %}
+
+
+{% block body %}
+    <p>{{ error }}</p>
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" placeholder="Username" name="username"><br><br>
+            <input type="text" placeholder="Mail" name="email"><br><br>
+            <input type="password" name="password" placeholder="Password"><br><br>
+            <input type="password" name="password2" placeholder="Repeat Password"><br><br>
+            <button type="submit">Регистрация</button>
+        </form>
+    </div>
+{% endblock %}
