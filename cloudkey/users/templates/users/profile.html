@@ -3,7 +3,11 @@
 {% block title %}Profile{% endblock %}
 
 {% block body %}
-<h1 class="main_text">Auth name: {{ user.username }}</h1>
-<p class="main_text">users</p>
-<button onclick="location.href='{% url 'logout' %}?next=/accounts/profile'">Logout</button>
+<div class="div_profile">
+    <button onclick="location.href='{% url 'add_card' %}'">Добавить данные</button>
+    <h1>Auth name: {{ user.username }}</h1>
+    <h1>Auth: {{ user.is_authenticated }}</h1>
+    <p>users</p>
+    <button onclick="location.href='{% url 'logout' %}?next=/accounts/profile'">Logout</button>
+</div>
 {% endblock %}

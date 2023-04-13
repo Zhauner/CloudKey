@@ -3,11 +3,36 @@ from django.shortcuts import render, reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from .get_all_mails import get_all_emails
+# from .forms import InfoCardForm
+from .models import InfoCard
 
 
 @login_required
 def profile_view(request):
     return render(request, 'users/profile.html')
+
+
+@login_required
+def add_new_card(request):
+
+    if request.method == 'POST':
+
+        infocard = InfoCard()
+        infocard.url = str(request.POST.get("url")).strip()
+        infocard.email = str(request.POST.get("email")).strip()
+        infocard.password = str(request.POST.get("password")).strip()
+        infocard.user_id = int(request.POST.get("user_id"))
+
+        try:
+            infocard.save()
+            return HttpResponseRedirect(reverse("profile"))
+        except:
+            return 'Error'
+
+    current_user = request.user
+    user_id = current_user.id
+    print(user_id)
+    return render(request, 'users/add_pass.html')
 
 
 def reg_user(request):

@@ -17,7 +17,11 @@
           <ul id="nav">
             <li><a href="{% url 'home' %}">Главная</a></li>
             <li><a href="#">Telegram bot</a></li>
-            <li><a href="{% url 'profile' %}">Профиль</a></li>
+            {% if user.is_authenticated %}
+                 <li><a href="{% url 'profile' %}">{{ user.username }}</a></li>
+            {% else %}
+                 <li><a href="{% url 'profile' %}">Профиль</a></li>
+            {% endif %}
             <li><a href="{% url 'reg' %}">Регистрация</a></li>
           </ul>
          </div>

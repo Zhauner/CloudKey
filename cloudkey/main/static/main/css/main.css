@@ -14,15 +14,15 @@ ul {
 
 a {
     font-size: 20px;
-    color: rgb(0, 255, 64);
+    color: rgb(0, 204, 156);
     text-decoration: none;
-    border: 2px solid rgb(0, 255, 64);
+    border: 2px solid rgb(0, 204, 156);
     border-radius: 15px;
     padding: 10px;
 }
 
 a:hover {
-    background: rgba(0, 255, 64);
+    background: linear-gradient(to bottom right, blue, pink);
     color: white;
     border-radius: 25px;
     transition: 0.8s;
@@ -42,11 +42,6 @@ header li {
     position: absolute;
     margin-left: 30px;
     top: -5px;
-}
-
-
-.main_text {
-    text-align: center;
 }
 
 footer {

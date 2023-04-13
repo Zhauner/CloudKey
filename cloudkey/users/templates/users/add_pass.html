@@ -1,0 +1,17 @@
+{% extends 'main/base.html' %}
+
+{% block title %}New password card{% endblock %}
+
+
+{% block body %}
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" placeholder="USER ID" value="{{ user.id }}" name="user_id">
+            <input type="text" placeholder="URL сайта" name="url"><br><br>
+            <input type="text" placeholder="Email сайта" name="email"><br><br>
+            <input type="text" placeholder="Пароль от  сайта" name="password"><br><br>
+            <button type="submit">Сохранить</button>
+        </form>
+    </div>
+{% endblock %}
