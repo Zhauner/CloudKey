@@ -3,13 +3,20 @@ from django.shortcuts import render, reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
 from .get_all_mails import get_all_emails
-# from .forms import InfoCardForm
 from .models import InfoCard
+from .scripts.replace_https import short_url
+from .scripts.get_favicon import *
 
 
 @login_required
 def profile_view(request):
-    return render(request, 'users/profile.html')
+
+    current_user = request.user
+    user_id = current_user.id
+
+    inf = InfoCard.objects.filter(user_id=user_id)
+
+    return render(request, 'users/profile.html', {"inf": inf})
 
 
 @login_required
@@ -17,11 +24,20 @@ def add_new_card(request):
 
     if request.method == 'POST':
 
+        url = str(request.POST.get("url")).strip()
+
         infocard = InfoCard()
-        infocard.url = str(request.POST.get("url")).strip()
+        infocard.url = url
         infocard.email = str(request.POST.get("email")).strip()
         infocard.password = str(request.POST.get("password")).strip()
         infocard.user_id = int(request.POST.get("user_id"))
+
+        url_from_icon = short_url(url)
+
+        try:
+            infocard.icon = get_favicon_from_url(url_from_icon)
+        except:
+            return ""
 
         try:
             infocard.save()
@@ -29,9 +45,6 @@ def add_new_card(request):
         except:
             return 'Error'
 
-    current_user = request.user
-    user_id = current_user.id
-    print(user_id)
     return render(request, 'users/add_pass.html')
 
 

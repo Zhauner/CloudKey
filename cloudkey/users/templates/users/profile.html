@@ -3,7 +3,13 @@
 {% block title %}Profile{% endblock %}
 
 {% block body %}
+
+
+
 <div class="div_profile">
+    {% for x in inf %}
+        <img src="data:image/png;base64,{{ x.icon }}" alt="Нету">
+    {% endfor %}
     <button onclick="location.href='{% url 'add_card' %}'">Добавить данные</button>
     <h1>Auth name: {{ user.username }}</h1>
     <h1>Auth: {{ user.is_authenticated }}</h1>

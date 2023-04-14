@@ -14,6 +14,3 @@ def short_url(url: str):
 
     else:
         return ""
-
-
-print(short_url("https://fox.com/index=0?1312"))
