@@ -5,15 +5,16 @@
 {% block body %}
 
 
+<button onclick="location.href='{% url 'add_card' %}'">Добавить данные</button>
+<button onclick="location.href='{% url 'logout' %}?next=/accounts/profile'">Logout</button>
 
 <div class="div_profile">
     {% for x in inf %}
-        <img src="data:image/png;base64,{{ x.icon }}" alt="Нету">
+        <div class="cards" style="box-shadow: 0px 0px 40px rgb({{ x.red }} , {{ x.green }} , {{ x.blue }});border: 1px solid rgb({{ x.red }} , {{ x.green }} , {{ x.blue }});">
+            <img class="icon_of_items" style="box-shadow: 0px 0px 20px rgb({{ x.red }} , {{ x.green }} , {{ x.blue }});" src="data:image/png;base64,{{ x.icon }}" alt="Нету" width="30px" height="30px">
+            <p class="name_of_service">{{ x.name_of_service }}</p>
+            <button>Показать данные</button>
+        </div>
     {% endfor %}
-    <button onclick="location.href='{% url 'add_card' %}'">Добавить данные</button>
-    <h1>Auth name: {{ user.username }}</h1>
-    <h1>Auth: {{ user.is_authenticated }}</h1>
-    <p>users</p>
-    <button onclick="location.href='{% url 'logout' %}?next=/accounts/profile'">Logout</button>
 </div>
 {% endblock %}

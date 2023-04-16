@@ -2,7 +2,7 @@ body {background: rgb(29, 42, 53);}
 
 header {
     height: 80px;
-    border-bottom: 1px solid green;
+    border-bottom: 1px solid rgb(0, 204, 156);
     border-radius: 10px;
 }
 
@@ -42,10 +42,4 @@ header li {
     position: absolute;
     margin-left: 30px;
     top: -5px;
-}
-
-footer {
-    border-top: 1px solid green;
-    /*background: silver;*/
-    border-radius: 10px;
 }

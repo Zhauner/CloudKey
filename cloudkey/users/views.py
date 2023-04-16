@@ -6,6 +6,7 @@ from .get_all_mails import get_all_emails
 from .models import InfoCard
 from .scripts.replace_https import short_url
 from .scripts.get_favicon import *
+from .scripts.avarage_color import *
 
 
 @login_required
@@ -33,11 +34,21 @@ def add_new_card(request):
         infocard.user_id = int(request.POST.get("user_id"))
 
         url_from_icon = short_url(url)
+        infocard.name_of_service = url_from_icon
 
         try:
             infocard.icon = get_favicon_from_url(url_from_icon)
         except:
             return ""
+
+        color_for_box_shadow = avarage_clr("fav.png")
+
+        try:
+            infocard.red = color_for_box_shadow[0]
+            infocard.green = color_for_box_shadow[1]
+            infocard.blue = color_for_box_shadow[2]
+        except:
+            return "Color error"
 
         try:
             infocard.save()

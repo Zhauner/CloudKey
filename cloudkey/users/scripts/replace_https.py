@@ -13,4 +13,4 @@ def short_url(url: str):
         return name[0]
 
     else:
-        return ""
+        return url
