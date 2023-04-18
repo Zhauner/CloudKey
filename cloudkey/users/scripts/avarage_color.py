@@ -1,3 +1,4 @@
+import os
 from PIL import Image, ImageStat
 
 
@@ -10,11 +11,15 @@ def avarage_clr(filename):
     if len(mean) >= 3:
 
         color = '{:.0f} {:.0f} {:.0f}'.format(*mean)
+        os.remove("fav.png")
+
         return color.split(' ')
 
     elif len(mean) == 2:
 
         color = '{:.0f} {:.0f} 0'.format(*mean)
+        os.remove("fav.png")
+
         return color.split(' ')
 
     elif len(mean) == 1:
@@ -25,5 +30,6 @@ def avarage_clr(filename):
 
         if red_color[0] < 100:
             red_color[0] = 100
+        os.remove("fav.png")
 
         return red_color
