@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, reverse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.models import User
-from .get_all_mails import get_all_emails
+from .scripts.get_all_mails import get_all_emails, get_all_nicknames
 from .models import InfoCard
 from .scripts.replace_https import short_url
 from .scripts.get_favicon import *
@@ -86,6 +86,9 @@ def reg_user(request):
             return render(request, 'users/regform.html', {"error": error})
         elif email in get_all_emails():
             error = 'Такой email уже существует'
+            return render(request, 'users/regform.html', {"error": error})
+        elif username in get_all_nicknames():
+            error = 'Такой username уже существует'
             return render(request, 'users/regform.html', {"error": error})
 
         try:
