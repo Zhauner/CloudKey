@@ -21,7 +21,7 @@ class SQLiteConnect:
             return user[0][0]
 
         elif user != [] and not check_password(password, user[0][1]):
-            return 'Неверный login(email) или пароль'
+            return False
         elif user == []:
 
             cursor.execute(f'SELECT * FROM auth_user WHERE email = "{login}";')
@@ -30,4 +30,4 @@ class SQLiteConnect:
             if user != [] and check_password(password, user[0][1]):
                 return user[0][0]
             else:
-                return 'Неверный login(email) или пароль'
+                return False

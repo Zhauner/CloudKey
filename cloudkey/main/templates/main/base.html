@@ -17,7 +17,7 @@
         <div class="nav_div">
           <ul id="nav">
             <li><a href="{% url 'home' %}">Главная</a></li>
-            <li><a href="#">Telegram bot</a></li>
+            <li><a href="{% url 'botinfo' %}">Telegram bot</a></li>
             {% if user.is_authenticated %}
                  <li><a href="{% url 'profile' %}">{{ user.username }}</a></li>
             {% else %}
