@@ -1,12 +1,15 @@
 import os
+import base64
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
+from aiogram.utils.markdown import hbold
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup
-
 from db_connect import SQLiteConnect
+from PIL import Image
+from io import BytesIO
 
 storage = MemoryStorage()
 
@@ -58,7 +61,16 @@ async def password_user(message: types.Message, state: FSMContext):
             global current_user_id
             is_login = True
             current_user_id = user_id
-            await message.answer('🟢 Вы успешно авторизованы! 🟢, введите "меню"', reply_markup=ReplyKeyboardRemove())
+
+            keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+            start_menu = ['Меню']
+            keyboard.add(*start_menu)
+
+            await message.answer(
+                '🟢 Вы успешно авторизованы! 🟢',
+                reply_markup=ReplyKeyboardRemove()
+            )
+            await message.answer('Нажмите кнопку "Меню"', reply_markup=keyboard)
         else:
             is_login = False
             current_user_id = 0
@@ -67,15 +79,47 @@ async def password_user(message: types.Message, state: FSMContext):
     await state.finish()
 
 
-@dp.message_handler(Text(equals='меню'))
+@dp.message_handler(Text(equals='Меню'))
 async def menu(message: types.Message):
     if is_login and current_user_id != 0:
         keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
-        menu_buttons = ['Мои пароли (Cloud[Key])', 'Выйти из системы']
+        menu_buttons = ['🔶 Мои пароли (Cloud[Key]) 🔶', 'Выйти из системы']
         keyboard.add(*menu_buttons)
         await message.answer('все пункты', reply_markup=keyboard)
     else:
         await message.answer('Вы не авторизованы')
+
+
+@dp.message_handler(Text(equals='🔶 Мои пароли (Cloud[Key]) 🔶'))
+async def show_datas(message: types.Message):
+    if is_login and current_user_id != 0:
+        data = db.show_datas_by_id(current_user_id)
+        for x in data:
+            fav = Image.open(BytesIO(base64.b64decode(x[1])))
+            fav.save("fav.png")
+            img = open("fav.png", "rb")
+            await message.answer_photo(img, caption=f'{x[-1]}')
+            os.remove('fav.png')
+    else:
+        await message.answer('Вы не авторизованы')
+
+
+@dp.message_handler(Text(equals='Выйти из системы'))
+async def logout(message: types.Message):
+    global is_login
+    global current_user_id
+    if is_login and current_user_id != 0:
+        is_login = False
+        current_user_id = 0
+
+        keyboard = ReplyKeyboardMarkup(resize_keyboard=True)
+        again_button = ['/start']
+        keyboard.add(*again_button)
+
+        await message.answer('Вы успешно вышли из системы!', reply_markup=ReplyKeyboardRemove())
+        await message.answer('Войти снова', reply_markup=keyboard)
+    else:
+        await message.answer('Вы не авторизованы!')
 
 
 @dp.message_handler(Text(equals='🔐 Проверка статуса'))

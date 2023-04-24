@@ -31,3 +31,15 @@ class SQLiteConnect:
                 return user[0][0]
             else:
                 return False
+        connect.close()
+
+    def show_datas_by_id(self, user_id):
+        connect = sqlite3.connect(self.path)
+        cursor = connect.cursor()
+        cursor.execute(f'SELECT * FROM users_infocard WHERE user_id = "{user_id}";')
+        return cursor.fetchall()
+
+#
+# ddd = SQLiteConnect('C:\\Users\\Stas\\Desktop\\CloudKey\\cloudkey\\db.sqlite3')
+#
+# print(ddd.show_datas_by_id(1))
