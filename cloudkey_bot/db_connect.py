@@ -33,13 +33,14 @@ class SQLiteConnect:
                 return False
         connect.close()
 
-    def show_datas_by_id(self, user_id):
+    def show_datas_by_user_id(self, user_id):
         connect = sqlite3.connect(self.path)
         cursor = connect.cursor()
         cursor.execute(f'SELECT * FROM users_infocard WHERE user_id = "{user_id}";')
         return cursor.fetchall()
 
-#
-# ddd = SQLiteConnect('C:\\Users\\Stas\\Desktop\\CloudKey\\cloudkey\\db.sqlite3')
-#
-# print(ddd.show_datas_by_id(1))
+    def show_card_by_callback_data_id(self, callback_id):
+        connect = sqlite3.connect(self.path)
+        cursor = connect.cursor()
+        cursor.execute(f'SELECT * FROM users_infocard WHERE id = "{callback_id}";')
+        return cursor.fetchall()

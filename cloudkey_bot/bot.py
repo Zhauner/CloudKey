@@ -3,10 +3,14 @@ import base64
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
-from aiogram.utils.markdown import hbold
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.types import ReplyKeyboardRemove, ReplyKeyboardMarkup
+from aiogram.types import (
+    ReplyKeyboardRemove,
+    ReplyKeyboardMarkup,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+                           )
 from db_connect import SQLiteConnect
 from PIL import Image
 from io import BytesIO
@@ -32,7 +36,10 @@ async def start_app(message: types.Message):
     start_button = ['✅ Логин', '🔐 Проверка статуса']
     keyboard.add(*start_button)
     await message.answer('👋')
-    await message.answer('Для начала работы авторизуйтесь используя данные с сайта Cloud[Key]', reply_markup=keyboard)
+    await message.answer(
+        'Для начала работы авторизуйтесь используя данные с сайта Cloud[Key]',
+        reply_markup=keyboard
+    )
 
 
 @dp.message_handler(Text(equals='✅ Логин'), state=None)
@@ -93,15 +100,35 @@ async def menu(message: types.Message):
 @dp.message_handler(Text(equals='🔶 Мои пароли (Cloud[Key]) 🔶'))
 async def show_datas(message: types.Message):
     if is_login and current_user_id != 0:
-        data = db.show_datas_by_id(current_user_id)
+
+        data = db.show_datas_by_user_id(current_user_id)
+        inline_keyboard = InlineKeyboardMarkup(row_width=1)
+        inline_keyboard.add(InlineKeyboardButton(text='Показать данные', callback_data=''))
         for x in data:
+
+            inline_keyboard.__dict__['_values']['inline_keyboard'][0][0]['callback_data'] = x[0]
+
             fav = Image.open(BytesIO(base64.b64decode(x[1])))
             fav.save("fav.png")
             img = open("fav.png", "rb")
-            await message.answer_photo(img, caption=f'{x[-1]}')
+
+            await message.answer_photo(
+                img,
+                caption=f'{x[-1]}',
+                reply_markup=inline_keyboard
+            )
             os.remove('fav.png')
     else:
         await message.answer('Вы не авторизованы')
+
+
+@dp.callback_query_handler()
+async def show_data(callback: types.CallbackQuery):
+    data = db.show_card_by_callback_data_id(callback.data)
+    await callback.message.reply(
+        data[0][2] + '\n\n' + 'Логин(email) : ' + data[0][3] + '\n\n' + 'Пароль : ' + data[0][4]
+    )
+    await callback.answer()
 
 
 @dp.message_handler(Text(equals='Выйти из системы'))
@@ -116,7 +143,10 @@ async def logout(message: types.Message):
         again_button = ['/start']
         keyboard.add(*again_button)
 
-        await message.answer('Вы успешно вышли из системы!', reply_markup=ReplyKeyboardRemove())
+        await message.answer(
+            'Вы успешно вышли из системы!',
+            reply_markup=ReplyKeyboardRemove()
+        )
         await message.answer('Войти снова', reply_markup=keyboard)
     else:
         await message.answer('Вы не авторизованы!')
