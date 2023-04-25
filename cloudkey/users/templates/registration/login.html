@@ -9,8 +9,8 @@
             {% csrf_token %}
             <img class="img-c" src="{% static 'main/img/auth_key_blue.png' %}" alt="logo_key" width="100" height="100">
             <p class="m-top">cloud[Key]</p>
-            <input class="login_input" type="text" placeholder="Username" name="username"><br><br>
-            <input class="login_input" type="password" name="password" placeholder="Password"><br><br>
+            <input class="login_input" type="text" placeholder="Username" name="username" required><br><br>
+            <input class="login_input" type="password" name="password" placeholder="Password" required><br><br>
             <button class="login_input" type="submit">Войти</button>
         </form>
     </div>
